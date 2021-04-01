@@ -1,7 +1,6 @@
 from aiohttp import web
 import asyncio
 from rpi_ws281x import PixelStrip
-from pprint import pprint
 
 from off import off
 
@@ -57,6 +56,9 @@ async def run_scene(request):
 
     return web.Response()
 
+async def scene_list(request):
+    return web.json_response(scene_names)
+
 async def cancel_task(request):
     print("off")
     global task
@@ -75,6 +77,7 @@ if __name__ == '__main__':
 
     app = web.Application()
 
+    app.router.add_get('/list', scene_list)
     app.router.add_post('/off', cancel_task)
 
     for name in scene_names:
