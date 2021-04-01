@@ -20,4 +20,4 @@ async def rainbow_walker(strip, wait_ms=10):
         hue += 0.001
         if hue > 1:
           hue = 0
-      await asyncio.sleep(wait_ms / 1000.0)
+        await asyncio.sleep(wait_ms / 1000.0)
