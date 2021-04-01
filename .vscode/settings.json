@@ -1,0 +1,6 @@
+{
+  "emeraldwalk.runonsave": {
+    "commands": [{"match": ".*", "isAsync": false, "cmd": "rsync -ar ${workspaceFolder} ledpi.fritz.box:/home/pi/ ; ssh pi@ledpi.fritz.box ./fireled/run_bg.sh"}]
+  },
+  "python.pythonPath": "/usr/local/bin/python3"
+}
