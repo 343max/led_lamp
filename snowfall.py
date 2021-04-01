@@ -25,7 +25,7 @@ async def snowfall(strip, wait_ms=20):
     for snowflake in snowflakes:
       pos = round((num_pixels - snowflake.position()) / skip) * skip
       strip.setPixelColor(pos, Color(255, 255, 255))
-      strip.setPixelColor(pos + 1, Color(255, 255, 255))
+      strip.setPixelColor(pos + skip, Color(255, 255, 255))
       snowflake.tick()
     strip.show()
 
@@ -34,6 +34,6 @@ async def snowfall(strip, wait_ms=20):
     if randint(0, 40) == 0:
       snowflakes += [Snowflake(randint(300, 1500)/1000)]
 
-    print(len(snowflakes))
+    # print(len(snowflakes))
 
     await asyncio.sleep(wait_ms / 1000.0)

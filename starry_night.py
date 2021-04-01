@@ -17,7 +17,7 @@ class Star:
       self.pos = randint(0, num_pixels)
       self.hue = uniform(0, 1)
       self.speed = uniform(0.003, 0.02)
-      self.maxLum = uniform(0.5, 1.0)
+      self.maxLum = uniform(0.5, 0.7)
 
   def color(self):
     return hls_to_color(self.hue, math.sin(math.pi * self.phase) * self.maxLum, 1)
@@ -43,8 +43,7 @@ async def starry_night(strip, wait_ms=20):
     stars = list(filter(lambda s: s.dead() == False, stars))
 
     prob = math.sqrt(1 / (len(stars) + 1))
-    if uniform(0, 2.5) < prob:
+    if uniform(0, 1.8) < prob:
       stars += [Star(num_pixels)]
-      print(len(stars))
 
     await asyncio.sleep(wait_ms / 1000.0)

@@ -1,4 +1,4 @@
-from showfall import snowfall
+from snowfall import snowfall
 from aiohttp import web
 import asyncio
 from rpi_ws281x import PixelStrip, Color
@@ -7,6 +7,8 @@ from off import off
 from starry_night import starry_night
 from walker import walker
 from rainbow_walker import rainbow_walker
+from whirl import whirl
+from lighthouse import lighthouse
 
 # LED strip configuration:
 LED_COUNT = 300        # Number of LED pixels.
@@ -77,6 +79,22 @@ async def run_rainbow_walker(request):
     task = asyncio.create_task(rainbow_walker(strip))
     return web.Response()
 
+async def run_whirl(request):
+    print('whirl')
+    global task
+    if (task != None):
+        task.cancel()
+    task = asyncio.create_task(whirl(strip))
+    return web.Response()
+
+async def run_lighthouse(request):
+    print('lighthouse')
+    global task
+    if (task != None):
+        task.cancel()
+    task = asyncio.create_task(lighthouse(strip))
+    return web.Response()
+
 async def cancel_task(request):
     print("off")
     global task
@@ -93,7 +111,7 @@ if __name__ == '__main__':
     strip.begin()
     
     print('go')
-    asyncio.run(rainbow_walker(strip))
+    asyncio.run(starry_night(strip))
 
     app = web.Application()
     # app.router.add_get('/', handle)
@@ -103,8 +121,11 @@ if __name__ == '__main__':
     app.router.add_post('/on', run_task)
     app.router.add_post('/lava_lamp', run_lava_lamp)
     app.router.add_post('/snowfall', run_snowfall)
+    app.router.add_post('/starry_night', run_starry_night)
     app.router.add_post('/walker', run_walker)
     app.router.add_post('/rainbow_walker', run_rainbow_walker)
+    app.router.add_post('/whirl', run_whirl)
+    app.router.add_post('/lighthouse', run_lighthouse)
 
     web.run_app(app)
 
