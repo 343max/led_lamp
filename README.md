@@ -2,7 +2,7 @@ I built a LED lamp as described [here](https://www.control-led.de/init/default/s
 
 This is my code, please modify it.
 
-Installation:
+### Installation:
 ```
 sudo pip3 install -r requirements.txt
 ```
@@ -11,15 +11,28 @@ run it:
 ```
 sudo python3 server.py
 ```
-
 (sudo is neccessary as it won't be able to talk to the GPIO otherwise)
 
-List of supported scenes:
+### List of supported scenes:
 ```
 curl http://lamp.local:8080/list
 ```
 
-Select a scene:
+### Select a scene:
 ```
 curl --data "" http://lamp.local:8080/starry_night
+```
+
+### Setup as service:
+
+Set the correct `WorkingDirectory` in `fireled.service` first
+
+```
+sudo cp fireled.service /etc/systemd/system/
+sudo systemctl enable fireled.service
+```
+
+start the service afterwards:
+```
+sudo systemctl start fireled.service
 ```
