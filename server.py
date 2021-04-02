@@ -12,6 +12,7 @@ from snowfall import snowfall
 from starry_night import starry_night
 from walker import walker
 from whirl import whirl
+import atexit
 
 # LED strip configuration:
 LED_COUNT = 300        # Number of LED pixels.
@@ -67,6 +68,8 @@ async def on_startup(app):
     if scene_name != None:
         print("restarting {scene_name}".format(scene_name=scene_name))
         run_scene(scene_name)
+    else:
+        off(strip)
 
 async def cancel_task(request):
     print("off")
@@ -77,7 +80,7 @@ async def cancel_task(request):
     
     store_scene(None)
 
-    await off(strip)
+    off(strip)
     return web.Response()
 
 if __name__ == '__main__':
@@ -85,6 +88,8 @@ if __name__ == '__main__':
     strip.begin()
     
     print('go')
+
+    atexit.register(off, strip)
 
     app = web.Application()
 
