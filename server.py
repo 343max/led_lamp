@@ -3,6 +3,7 @@ import asyncio
 from rpi_ws281x import PixelStrip
 
 from off import off
+from settings import store_scene, load_scene
 
 from lava_lamp import lava_lamp
 from lighthouse import lighthouse
@@ -37,15 +38,9 @@ scenes = [
 
 scene_names = list(map(lambda s: s.__name__, scenes))
 
-async def run_scene(request):
-    scene_name = request.path[1:]
-    try:
-        index = scene_names.index(scene_name)
-    except ValueError:
-        return web.Response(status=404)
-
+def run_scene(scene_name: str):
+    index = scene_names.index(scene_name)
     print('running {scene_name}'.format(scene_name=scene_name))
-
     scene = scenes[index]
 
     global task
@@ -54,10 +49,24 @@ async def run_scene(request):
 
     task = asyncio.create_task(scene(strip))
 
+    store_scene(scene_name)
+
+async def handle_run_scene(request):
+    scene_name = request.path[1:]
+    try:
+        run_scene(scene_name)
+    except ValueError:
+        return web.Response(status=404)
     return web.Response()
 
 async def scene_list(request):
     return web.json_response(scene_names)
+
+async def on_startup(app):
+    scene_name = load_scene()
+    if scene_name != None:
+        print("restarting {scene_name}".format(scene_name=scene_name))
+        run_scene(scene_name)
 
 async def cancel_task(request):
     print("off")
@@ -65,6 +74,9 @@ async def cancel_task(request):
     if (task != None):
         task.cancel()
     task = None
+    
+    store_scene(None)
+
     await off(strip)
     return web.Response()
 
@@ -73,14 +85,15 @@ if __name__ == '__main__':
     strip.begin()
     
     print('go')
-    # asyncio.run(starry_night(strip))
 
     app = web.Application()
+
+    app.on_startup.append(on_startup)
 
     app.router.add_get('/list', scene_list)
     app.router.add_post('/off', cancel_task)
 
     for name in scene_names:
-        app.router.add_post('/{name}'.format(name=name), run_scene)
+        app.router.add_post('/{name}'.format(name=name), handle_run_scene)
 
     web.run_app(app)

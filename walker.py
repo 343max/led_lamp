@@ -13,7 +13,7 @@ async def walker(strip, wait_ms=20):
     ]:
       for j in range(num_pixels + 20, -20, -1):
         for i in range(num_pixels):
-          strip.setPixelColor(i, Color(0, 0, 0))
+          strip.setPixelColor(i, 0)
         for k in range(j, j + 20):
           strip.setPixelColor(k, color)
         strip.show()

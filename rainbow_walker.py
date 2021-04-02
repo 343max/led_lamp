@@ -13,7 +13,7 @@ async def rainbow_walker(strip, wait_ms=10):
     ]:
       for j in r:
         for i in range(num_pixels):
-          strip.setPixelColor(i, Color(0, 0, 0))
+          strip.setPixelColor(i, 0)
         for k in range(j, j + badge_width):
           strip.setPixelColor(k, hls_to_color(hue, 0.5, 1.0))
         strip.show()
