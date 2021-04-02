@@ -4,7 +4,9 @@ from rpi_ws281x import PixelStrip
 
 from off import off
 from settings import store_scene, load_scene
+import atexit
 
+from droplets import droplets
 from lava_lamp import lava_lamp
 from lighthouse import lighthouse
 from rainbow_walker import rainbow_walker
@@ -12,7 +14,6 @@ from snowfall import snowfall
 from starry_night import starry_night
 from walker import walker
 from whirl import whirl
-import atexit
 
 # LED strip configuration:
 LED_COUNT = 300        # Number of LED pixels.
@@ -28,6 +29,7 @@ task = None
 strip = None
 
 scenes = [
+    droplets,
     lava_lamp,
     lighthouse,
     rainbow_walker,

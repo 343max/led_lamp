@@ -17,4 +17,4 @@ async def walker(strip, wait_ms=20):
         for k in range(j, j + 20):
           strip.setPixelColor(k, color)
         strip.show()
-      await asyncio.sleep(wait_ms / 1000.0)
+        await asyncio.sleep(wait_ms / 1000.0)
