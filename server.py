@@ -52,7 +52,7 @@ def run_scene(scene_name: str):
 
     task = asyncio.create_task(scene(strip))
 
-    store_scene(scene_name)
+    store_scene(scene_name, True)
 
 async def handle_run_scene(request):
     scene_name = request.path[1:]
@@ -62,28 +62,42 @@ async def handle_run_scene(request):
         return web.Response(status=404)
     return web.Response()
 
-async def scene_list(request):
+async def handle_scene_list(request):
     return web.json_response(scene_names)
 
 async def on_startup(app):
-    scene_name = load_scene()
-    if scene_name != None:
+    (scene_name, on) = load_scene()
+    if on == True and scene_name != None:
         print("restarting {scene_name}".format(scene_name=scene_name))
         run_scene(scene_name)
     else:
         off(strip)
 
-async def cancel_task(request):
+async def handle_off(request):
     print("off")
     global task
     if (task != None):
         task.cancel()
     task = None
     
-    store_scene(None)
+    (scene_name, _) = load_scene()
+    store_scene(scene_name, False)
 
     off(strip)
     return web.Response()
+
+async def handle_on(request):
+    (scene_name, _) = load_scene()
+    if scene_name == None:
+        scene_name = scene_names[0]
+    
+    run_scene(scene_name)
+    return web.Response()
+
+async def handle_status(request):
+    global task
+    on = '0' if task == None else '1'
+    return web.Response(body=on)
 
 if __name__ == '__main__':
     strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
@@ -97,8 +111,10 @@ if __name__ == '__main__':
 
     app.on_startup.append(on_startup)
 
-    app.router.add_get('/list', scene_list)
-    app.router.add_post('/off', cancel_task)
+    app.router.add_get('/list', handle_scene_list)
+    app.router.add_get('/status', handle_status)
+    app.router.add_post('/on', handle_on)
+    app.router.add_post('/off', handle_off)
 
     for name in scene_names:
         app.router.add_post('/{name}'.format(name=name), handle_run_scene)
