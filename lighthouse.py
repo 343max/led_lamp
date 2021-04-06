@@ -1,3 +1,4 @@
+from process_pixel import process_pixel
 from rpi_ws281x import Color
 import asyncio
 
@@ -15,6 +16,6 @@ async def lighthouse(strip, wait_ms=400):
       for j in range(skip):
         for i in range(num_pixels):
           c = color if (i + j) % skip == 0 else Color(0, 0, 0)
-          strip.setPixelColor(i, c)
+          strip.setPixelColor(i, process_pixel(c))
         strip.show()
         await asyncio.sleep(wait_ms / 1000.0)

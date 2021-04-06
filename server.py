@@ -1,12 +1,14 @@
 from aiohttp import web
 import asyncio
 from rpi_ws281x import PixelStrip
-
-from off import off
-from settings import store_scene, load_scene
 import atexit
+import logging
+
+from off import off, off_animated
+from settings import store_scene, load_scene
 
 from droplets import droplets
+from fireplace import fireplace
 from lava_lamp import lava_lamp
 from lighthouse import lighthouse
 from rainbow_walker import rainbow_walker
@@ -30,13 +32,14 @@ strip = None
 
 scenes = [
     droplets,
+    fireplace,
     lava_lamp,
     lighthouse,
     rainbow_walker,
     snowfall,
     starry_night,
     walker,
-    whirl
+    whirl,
 ]
 
 scene_names = list(map(lambda s: s.__name__, scenes))
@@ -75,6 +78,7 @@ async def on_startup(app):
 
 async def handle_off(request):
     print("off")
+    await off_animated(strip)
     global task
     if (task != None):
         task.cancel()
@@ -100,6 +104,8 @@ async def handle_status(request):
     return web.Response(body=on)
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+
     strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
     strip.begin()
     

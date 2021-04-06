@@ -1,4 +1,4 @@
-from rpi_ws281x import Color
+from process_pixel import process_pixel
 import asyncio
 from random import randint, uniform
 from helpers import hls_to_color
@@ -19,7 +19,7 @@ class Droplet:
 
   def draw(self, strip):
     for i in range(self.pos - self.expansion, self.pos + self.expansion):
-      strip.setPixelColor(i, self.color)
+      strip.setPixelColor(i, process_pixel(self.color))
 
   def filled(self):
     return self.expansion >= self.pos and self.expansion + self.pos >= self.num_pixels

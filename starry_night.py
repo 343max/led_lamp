@@ -1,3 +1,4 @@
+from process_pixel import process_pixel
 from rpi_ws281x import Color
 import asyncio
 from colorsys import hls_to_rgb
@@ -34,9 +35,9 @@ async def starry_night(strip, wait_ms=20):
   skip = 4
   while True:
     for i in range(num_pixels):
-      strip.setPixelColor(i, Color(0, 0, 0))
+      strip.setPixelColor(i, process_pixel(0))
     for star in stars:
-      strip.setPixelColor(star.pos, star.color())
+      strip.setPixelColor(star.pos, process_pixel(star.color()))
       star.tick()
     strip.show()
 

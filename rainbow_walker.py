@@ -1,3 +1,4 @@
+from process_pixel import process_pixel
 from rpi_ws281x import Color
 import asyncio
 from helpers import hls_to_color
@@ -13,9 +14,9 @@ async def rainbow_walker(strip, wait_ms=10):
     ]:
       for j in r:
         for i in range(num_pixels):
-          strip.setPixelColor(i, 0)
+          strip.setPixelColor(i, process_pixel(0))
         for k in range(j, j + badge_width):
-          strip.setPixelColor(k, hls_to_color(hue, 0.5, 1.0))
+          strip.setPixelColor(k, process_pixel(hls_to_color(hue, 0.5, 1.0)))
         strip.show()
         hue += 0.001
         if hue > 1:

@@ -1,3 +1,4 @@
+from process_pixel import process_pixel
 from rpi_ws281x import Color
 import asyncio
 
@@ -13,8 +14,8 @@ async def walker(strip, wait_ms=20):
     ]:
       for j in range(num_pixels + 20, -20, -1):
         for i in range(num_pixels):
-          strip.setPixelColor(i, 0)
+          strip.setPixelColor(i, process_pixel(0))
         for k in range(j, j + 20):
-          strip.setPixelColor(k, color)
+          strip.setPixelColor(k, process_pixel(color))
         strip.show()
         await asyncio.sleep(wait_ms / 1000.0)

@@ -1,3 +1,4 @@
+from process_pixel import process_pixel
 from rpi_ws281x import Color
 import asyncio
 from random import randint
@@ -21,11 +22,11 @@ async def snowfall(strip, wait_ms=20):
   skip = 4
   while True:
     for i in range(num_pixels):
-      strip.setPixelColor(i, Color(0, 0, 0))
+      strip.setPixelColor(i, process_pixel(0))
     for snowflake in snowflakes:
       pos = round((num_pixels - snowflake.position()) / skip) * skip
-      strip.setPixelColor(pos, Color(255, 255, 255))
-      strip.setPixelColor(pos + skip, Color(255, 255, 255))
+      strip.setPixelColor(pos, process_pixel(Color(255, 255, 255)))
+      strip.setPixelColor(pos + skip, process_pixel(Color(255, 255, 255)))
       snowflake.tick()
     strip.show()
 
