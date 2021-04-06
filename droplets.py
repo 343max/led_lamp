@@ -1,7 +1,5 @@
 from rpi_ws281x import Color
 import asyncio
-from colorsys import hls_to_rgb
-import math
 from random import randint, uniform
 from helpers import hls_to_color
 
@@ -30,16 +28,10 @@ async def droplets(strip, wait_ms=20):
   num_pixels = strip.numPixels()
 
   droplets: list[Droplet] = [Droplet(num_pixels)]
-  background = 0
   while True:
-    for i in range(num_pixels):
-      strip.setPixelColor(i, background)
-
     for droplet in droplets:
       droplet.tick()
       droplet.draw(strip)
-      if droplet.filled():
-        background = droplet.color
 
     droplets = list(filter(lambda d: d.filled() == False, droplets))
 
