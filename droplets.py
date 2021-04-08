@@ -33,7 +33,8 @@ async def droplets(strip, wait_ms=20):
       droplet.tick()
       droplet.draw(strip)
 
-    droplets = list(filter(lambda d: d.filled() == False, droplets))
+    if len(droplets) > 0 and droplets[0].filled():
+      droplets = droplets[1:]
 
     if len(droplets) < 4 and randint(0, 40) == 0:
       droplets += [Droplet(num_pixels)]
