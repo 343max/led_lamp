@@ -53,6 +53,7 @@ def run_scene(scene_name: str):
     if task != None:
         task.cancel()
 
+    global strip
     task = asyncio.create_task(scene(strip))
 
     store_scene(scene_name, True)
@@ -69,6 +70,7 @@ async def handle_scene_list(request):
     return web.json_response(scene_names)
 
 async def on_startup(app):
+    global strip
     (scene_name, on) = load_scene()
     if on == True and scene_name != None:
         print("restarting {scene_name}".format(scene_name=scene_name))
@@ -78,6 +80,7 @@ async def on_startup(app):
 
 async def handle_off(request):
     print("off")
+    global strip
     await off_animated(strip)
     global task
     if (task != None):
