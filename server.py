@@ -98,6 +98,7 @@ async def handle_on(request):
     if scene_name == None:
         scene_name = scene_names[0]
     
+    print('restoring {scene_name}'.format(scene_name=scene_name))
     run_scene(scene_name)
     return web.Response()
 
