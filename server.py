@@ -80,6 +80,10 @@ async def on_startup(app):
 
 async def handle_off(request):
     print("off")
+
+    (scene_name, _) = load_scene()
+    store_scene(scene_name, False)
+
     global strip
     await off_animated(strip)
     global task
@@ -87,9 +91,6 @@ async def handle_off(request):
         task.cancel()
     task = None
     
-    (scene_name, _) = load_scene()
-    store_scene(scene_name, False)
-
     off(strip)
     return web.Response()
 
